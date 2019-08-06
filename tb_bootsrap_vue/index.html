@@ -117,19 +117,25 @@
 
 			],
 			fields: [
-				{ key: "firstname", label: "First name", sortable: true },
-				{ key: "lastname", label: "Last name", sortable: true },
+				{ key: "id", label: "Id", sortable: true },
+				{ key: "name", label: "Name", sortable: true },
 				{ key: "email", label: "Email", sortable: true }
 			]
 		};
 	},
+    created: function () {
+        var _this = this;
+        $.getJSON('https://jsonplaceholder.typicode.com/comments', function (json) {
+            _this.dataArray = json;
+        });
+    },
 	computed: {
 		items() {
 			return this.keyword
 				? this.dataArray.filter(
 						item =>
-							item.firstname.includes(this.keyword) ||
-							item.lastname.includes(this.keyword) ||
+							item.id.includes(this.keyword) ||
+							item.name.includes(this.keyword) ||
 							item.email.includes(this.keyword)
 					)
 				: this.dataArray;
