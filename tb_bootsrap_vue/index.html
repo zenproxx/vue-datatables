@@ -46,12 +46,14 @@
                     id="my-table"
                     show-empty
                     :items="items"
+                    :filter="keyword"
                     :fields="fields"
                     :current-page="currentPage"
                     :per-page="perPage"
                     :sort-by.sync="sortBy"
                     :sort-desc.sync="sortDesc"
                     :sort-direction="sortDirection"
+                    @filtered="onFiltered"
                    
                     >
                 </b-table>
@@ -77,45 +79,7 @@
             perPage: 5,
             pageOptions: [5, 10, 15],
             keyword: "",
-			dataArray: [
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				
-                { firstname: "Jane", lastname: "Doe", email: "janedoe@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-				{ firstname: "John", lastname: "Doo", email: "johndoo@example.com" },
-
-			],
+            items: [],
 			fields: [
 				{ key: "id", label: "Id", sortable: true },
 				{ key: "name", label: "Name", sortable: true },
@@ -123,25 +87,22 @@
 			]
 		};
 	},
+  methods: {
+    onFiltered(filteredItems) {
+        // Trigger pagination to update the number of buttons/pages due to filtering
+        this.rows = filteredItems.length
+        this.currentPage = 1
+      }
+  },
     created: function () {
         var _this = this;
         $.getJSON('https://jsonplaceholder.typicode.com/comments', function (json) {
-            _this.dataArray = json;
+            _this.items = json;
+            _this.rows = json.length;
         });
-    },
+       
 	computed: {
-		items() {
-			return this.keyword
-				? this.dataArray.filter(
-						item =>
-							item.id.includes(this.keyword) ||
-							item.name.includes(this.keyword) ||
-							item.email.includes(this.keyword)
-					)
-				: this.dataArray;
-		},
-        rows() {
-        return this.dataArray.length
+		    
       }
 	}
       })
